@@ -1,14 +1,19 @@
 <template>
   <div class="login-container">
-    <el-form ref="LoginForm" :model="loginForm" :rules="loginRules" class="login-form">
+    <el-form
+      ref="LoginForm"
+      :model="loginForm"
+      :rules="loginRules"
+      class="login-form"
+    >
       <div class="title-container">
         <h3 class="title">欢迎来到VueAdmin</h3>
       </div>
       <div>
         <span>用户名</span>
-       <el-form-item prop="username">
-       <el-input v-model="loginForm.username" />
-      </el-form-item>
+        <el-form-item prop="username">
+          <el-input v-model="loginForm.username" />
+        </el-form-item>
       </div>
       <div class="title-input">
         <span>密码</span>
@@ -16,15 +21,29 @@
           <el-input :type="inputType" v-model="loginForm.password"></el-input>
         </el-form-item>
       </div>
-      <el-button class="login-button" type="primary" @click="handleLoginSubmit(LoginForm)">提交</el-button>
+      <el-button
+        class="login-button"
+        type="primary"
+        @click="handleLoginSubmit(LoginForm)"
+        >提交</el-button
+      >
     </el-form>
   </div>
 </template>
 
 <script setup>
+import util from '../../utils/util'
+import { useStore } from 'vuex'
 import { reactive, ref } from 'vue'
 import { validatePassword } from './rule'
+import md5 from 'md5'
+import { useRouter } from 'vue-router'
+
+const store = useStore()
+const router = useRouter()
+
 const inputType = ref('password')
+const LoginForm = ref()
 const loginForm = reactive({
   username: 'test',
   password: '123456'
@@ -45,17 +64,23 @@ const loginRules = reactive({
     }
   ]
 })
-const handleLoginSubmit = async (formName) => {
-  if (!formName) return
-  await formName.validate((valid) => {
+// 登录方式
+const handleLoginSubmit = async () => {
+  if (!LoginForm.value) return
+  await LoginForm.value.validate(async valid => {
     if (valid) {
-      alert('登录')
+      const newLoginForm = util.deepCopy(loginForm)
+      newLoginForm.password = md5(newLoginForm.password)
+
+      const response = await store.dispatch('user/login', newLoginForm)
+
+      if (response.token) router.push('/')
     }
   })
 }
 </script>
 
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .login-container {
   position: relative;
   height: 100%;

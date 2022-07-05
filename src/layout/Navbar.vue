@@ -1,10 +1,11 @@
 <template>
-  <div class="app-container">
-    layout 页面
+  <div>
+    navbar
   </div>
 </template>
 
 <script setup></script>
 
 <style lang="scss" scoped>
+
 </style>

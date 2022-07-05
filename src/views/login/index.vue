@@ -24,7 +24,7 @@
       <el-button
         class="login-button"
         type="primary"
-        @click="handleLoginSubmit(LoginForm)"
+        @click="handleLoginSubmit"
         >提交</el-button
       >
     </el-form>
@@ -73,7 +73,6 @@ const handleLoginSubmit = async () => {
       newLoginForm.password = md5(newLoginForm.password)
 
       const response = await store.dispatch('user/login', newLoginForm)
-
       if (response.token) router.push('/')
     }
   })

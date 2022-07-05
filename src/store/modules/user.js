@@ -1,7 +1,7 @@
 import UserApi from '../../api/user'
 import { setItem, getItem } from '../../utils/storage'
 export default {
-  namespscd: true,
+  namespaced: true,
   state: () => ({
     token: getItem('token') || ''
   }),
